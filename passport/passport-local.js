@@ -1,7 +1,9 @@
-const passport = require('passport');
-const User = require('../models/user');
-const LocalStategy = require('passport-local').Strategy;
-const bcrytjs = require('bcryptjs');
+const passport = require("passport");
+const User = require("../models/user");
+const LocalStategy = require("passport-local").Strategy;
+const bcrytjs = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const _ = require("lodash");
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
@@ -11,73 +13,45 @@ passport.deserializeUser((id, done) => {
   });
 });
 passport.use(
-  'local.signup',
-  new LocalStategy(
-    {
-      usernameField: 'email',
-      passwordField: 'password',
-      passReqToCallback: true
-    },
-    (req, email, password, done) => {
-      User.findOne(
-        {
-          $or: [{ email }, { username: req.body.username }]
-        },
-        (err, user) => {
-          console.log(req.body);
-          if (err) {
-            return done(err);
-          }
-          if (user) {
-            if (user.username === req.body.username)
-              return done(
-                null,
-                false,
-                req.flash('error', 'Username alrealy exist')
-              );
-            else
-              return done(
-                null,
-                false,
-                req.flash('error', 'Email alrealy exist')
-              );
-          }
-          const newUser = new User();
-          newUser.username = req.body.username;
-          newUser.fullname = req.body.username;
-          newUser.email = req.body.email;
-          newUser.password = newUser.encryptPassword(req.body.password);
-          newUser.save(err => {
-            done(null, newUser);
-          });
-        }
-      );
-    }
-  )
+  "local.signup",
+  new LocalStategy((email, password, done) => {
+    User.findOne({ email: email }, (err, user) => {
+      if (err) {
+        return done(err);
+      }
+      if (user) {
+        // var token = jwt.sign({ id: user._id }, "key");
+        // user.token = _.join(["LC", token], "|");
+        return done(null, { haha: "user ton tai", code: 1 });
+      }
+      const newUser = new User();
+      newUser.username = email;
+      newUser.fullname = email;
+      newUser.email = email;
+      newUser.password = newUser.encryptPassword(password);
+      var token = jwt.sign({ id: newUser._id }, "key");
+      newUser.token = _.join(["LC", token], "|");
+      newUser.save(err => {
+        done(null, newUser);
+      });
+    });
+  })
 );
 passport.use(
-  'local.signin',
-  new LocalStategy(
-    {
-      usernameField: 'email',
-      passwordField: 'password',
-      passReqToCallback: true
-    },
-    (req, email, password, done) => {
-      User.findOne({ email: email }, (err, user) => {
-        if (err) {
-          return done(err);
-        }
-        console.log(req.body);
-        if (!user || !user.comparePassword(password)) {
-          return done(
-            null,
-            false,
-            req.flash('error', 'email or pass is Invalid')
-          );
-        }
-        return done(null, user);
-      });
-    }
-  )
+  "local.signin",
+  new LocalStategy((username, password, done) => {
+    User.findOne({ email: username }, (err, user) => {
+      if (err) {
+        return done(null, { haha: "haha" });
+      }
+      if (!user || !user.comparePassword(password)) {
+        return done(null, { haha: "haha" });
+      }
+      var token = jwt.sign({ id: user._id }, "key");
+      user.token = _.join(["LC", token], "|");
+      // var decoded = jwt.verify(token, 'shhhhh');
+      console.log(user);
+      return done(null, user);
+    });
+  })
 );

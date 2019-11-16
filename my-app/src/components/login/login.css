@@ -1,0 +1,98 @@
+/* Made with love by Mutiullah Samim*/
+
+@import url("https://fonts.googleapis.com/css?family=Numans");
+/* @import url("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"); */
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
+
+body {
+  /* background-image: url("http://getwallpapers.com/wallpaper/full/a/5/d/544750.jpg"); */
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: auto;
+  width: auto;
+  font-family: "Numans", sans-serif;
+}
+
+.x {
+  height: 100vh;
+  align-content: center;
+  background-image: url("http://localhost:4000/uploads/backgroud.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  font-family: "Numans", sans-serif;
+}
+
+.cardd {
+  height: auto;
+  margin-top: 100px;
+  margin-bottom: auto;
+  width: 400px;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+.social_icon {
+  position: inherit !important;
+  right: 20px;
+  top: -45px;
+}
+.social_icon span {
+  font-size: 60px;
+  margin-left: 10px;
+  color: #ffc312;
+}
+
+.social_icon span:hover {
+  color: white;
+  cursor: pointer;
+}
+
+.card-header h3 {
+  color: white;
+}
+
+.social_icon {
+  position: absolute;
+  right: 20px;
+  top: -45px;
+}
+
+.input-group-prepend span {
+  width: 50px;
+  background-color: #ffc312;
+  color: black;
+  border: 0 !important;
+}
+
+input:focus {
+  outline: 0 0 0 0 !important;
+  box-shadow: 0 0 0 0 !important;
+}
+
+.remember {
+  color: white;
+}
+
+.remember input {
+  width: 20px;
+  height: 20px;
+  margin-left: 15px;
+  margin-right: 5px;
+}
+
+.login_btn {
+  color: black;
+  background-color: #ffc312;
+  width: 100px;
+}
+
+.login_btn:hover {
+  color: black;
+  background-color: white;
+}
+
+.links {
+  color: white;
+}
+
+.links a {
+  margin-left: 4px;
+}
