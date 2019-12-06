@@ -1,11 +1,17 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
+import deleteCookie from "../../utils/DeleteCookie";
 import "../home/style.css";
 // import { Dropdown } from 'react-bootstrap';
-export default class NavbarPage extends Component {
+class NavbarPage extends Component {
   constructor(props) {
     super(props);
     this.state = { data: {} };
   }
+  Logout = () => {
+    deleteCookie("token");
+    this.props.history.push("/login");
+  };
   componentDidMount() {}
   render() {
     return (
@@ -29,7 +35,10 @@ export default class NavbarPage extends Component {
             </a>
           </div>
 
-          <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <div
+            className="collapse navbar-collapse"
+            id="bs-example-navbar-collapse-1"
+          >
             <ul className="nav navbar-nav navbar-right" id="reload">
               <li>
                 <a href="#" className="dropdown-toggle" data-toggle="dropdown">
@@ -48,7 +57,9 @@ export default class NavbarPage extends Component {
                       <div className="col-md-12">
                         <div className="row">
                           <div className="dropdown-tag">
-                            <h3 className="text-center dropdown-tag-head">Friend Requests</h3>
+                            <h3 className="text-center dropdown-tag-head">
+                              Friend Requests
+                            </h3>
                           </div>
                         </div>
                       </div>
@@ -95,7 +106,10 @@ export default class NavbarPage extends Component {
                                         id="accept_friend"
                                         className="btn btn-default drop-accept accept"
                                       >
-                                        <i className="fa fa-check" aria-hidden="true"></i>
+                                        <i
+                                          className="fa fa-check"
+                                          aria-hidden="true"
+                                        ></i>
                                         Accept
                                       </button>
                                     </div>
@@ -112,7 +126,10 @@ export default class NavbarPage extends Component {
                                         className="btn drop-cancel remove"
                                         id="cancel_friend"
                                       >
-                                        <i className="fa fa-times" aria-hidden="true"></i>
+                                        <i
+                                          className="fa fa-times"
+                                          aria-hidden="true"
+                                        ></i>
                                         Cancel
                                       </button>
                                     </div>
@@ -134,7 +151,7 @@ export default class NavbarPage extends Component {
               </li>
 
               <li>
-                <a role="button" onClick={this.props.onLogout}>
+                <a role="button" onClick={() => this.Logout()}>
                   Logout
                 </a>
               </li>
@@ -167,3 +184,4 @@ export default class NavbarPage extends Component {
     );
   }
 }
+export default withRouter(NavbarPage);

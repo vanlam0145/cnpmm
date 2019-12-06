@@ -1,16 +1,26 @@
 import axios from "axios";
+import setCookie from "../utils/setCookie";
 const SERVER_URL = "http://localhost:4000";
 const login = async data => {
   const LOGIN_ENDPOINT = `${SERVER_URL}/`;
 
   try {
     console.log(data);
-    let response = await axios.post(LOGIN_ENDPOINT, data);
+    const { username, password } = data;
+    const user = { username: username, password: password };
+    let response = await axios.post(LOGIN_ENDPOINT, user);
     console.log("hihi" + response.data);
+    console.log("cc: ", response.status);
+
     if (response.status === 200 && response.data) {
       let jwt = response.data;
       console.log(jwt);
-      localStorage.setItem("access_token", jwt);
+      if (data.cbRemember == true) {
+        console.log("cc");
+        setCookie(jwt);
+      } else if (data.cbRemember == false) {
+        document.cookie = `token=${jwt}`;
+      }
     }
     return true;
   } catch (e) {

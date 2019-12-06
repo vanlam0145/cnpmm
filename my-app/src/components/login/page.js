@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import "./login.css";
 import * as lg from "../../utils/login";
 import queryString from "query-string";
-export default class LoginPage extends Component {
+import checkToken from "../../utils/CheckToken";
+import { withRouter } from "react-router-dom";
+class LoginPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -10,7 +12,8 @@ export default class LoginPage extends Component {
       password: "",
       submitted: false,
       loading: false,
-      error: ""
+      error: "",
+      cbRemember: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -21,17 +24,23 @@ export default class LoginPage extends Component {
       window.localStorage.setItem("access_token", query.token);
       this.props.history.push("/home");
     }
+    if(checkToken()){
+      this.props.history.push("/home")
+    }
   }
   handleChange(e) {
     const { name, value } = e.target;
     this.setState({ [name]: value });
+    if (e.target.name === "cbRemember") {
+      this.setState({ cbRemember: !this.state.cbRemember });
+    }
   }
 
   async handleSubmit(e) {
     e.preventDefault();
 
     this.setState({ submitted: true });
-    const { username, password } = this.state;
+    const { username, password, cbRemember } = this.state;
 
     // stop here if form is invalid
     if (!(username && password)) {
@@ -39,13 +48,13 @@ export default class LoginPage extends Component {
     }
     console.log(username, password);
     this.setState({ loading: true });
-    const islogin = await lg.login({ username, password });
+    const islogin = await lg.login({ username, password, cbRemember });
     console.log(islogin);
-    if (islogin && localStorage.getItem("access_token")) {
-      const { from } = this.props.location.state || {
-        from: { pathname: "/home" }
-      };
-      await this.props.history.push(from);
+    console.log("cooki: ", document.cookie);
+    const result = checkToken();
+    console.log("checktoken: ", checkToken());
+    if (checkToken() !== undefined) {
+      await this.props.history.push("/home");
     } else this.setState({ error: "dang nhap that bai", loading: false });
   }
   render() {
@@ -104,7 +113,7 @@ export default class LoginPage extends Component {
                     </span>
                   </div>
                   <input
-                    type="password"
+                    type="text"
                     className="form-control"
                     placeholder="password"
                     name="password"
@@ -112,6 +121,24 @@ export default class LoginPage extends Component {
                     onChange={this.handleChange}
                   />
                 </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    checked={this.state.cbRemember}
+                    onChange={event => this.handleChange(event)}
+                    id="cbRemember"
+                    name="cbRemember"
+                  />
+                  <label
+                    class="form-check-label"
+                    for="cbRemember"
+                    style={{ marginLeft: "20px" }}
+                  >
+                    Remember me
+                  </label>
+                </div>
+
                 {/* <div className="row align-items-center remember">
                   <input type="checkbox" />
                   Remember Me
@@ -146,3 +173,4 @@ export default class LoginPage extends Component {
     );
   }
 }
+export default (LoginPage)
