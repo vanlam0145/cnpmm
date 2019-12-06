@@ -21,7 +21,7 @@ container.resolve(function(users, _, admin, home, group, routerExportReqToDoc) {
 
   function SetupExpress() {
     const app = express();
-    const port = process.env.PORT || 4000;
+    const port = process.env.PORT || 4001;
     mongoose
       .connect("mongodb+srv://cross:123xyz@cluster0-lstqi.mongodb.net/chat?retryWrites=true", {
         useNewUrlParser: true
@@ -33,7 +33,7 @@ container.resolve(function(users, _, admin, home, group, routerExportReqToDoc) {
     const server = http.createServer(app);
     secureIO = socketIO(server);
     server.listen(port, function() {
-      console.log(`server run on port : 3000!!!`);
+      console.log(`server run on port : ${port}!!!`);
     });
     // } else {
     //   app.set('port', port);
