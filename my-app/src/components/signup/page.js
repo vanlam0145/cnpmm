@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import checkToken from '../../utils/CheckToken'
 import "../login/login.css";
 import * as lg from "../../utils/login";
 import queryString from "query-string";
@@ -25,6 +26,11 @@ export default class SignUpPage extends Component {
   //       this.props.history.push("/home");
   //     }
   //   }
+  componentDidMount(){
+    if(checkToken()){
+      this.props.history.push("/home")
+    }
+  }
   handleChange(e) {
     const { name, value } = e.target;
     this.setState({ [name]: value }, () => {
