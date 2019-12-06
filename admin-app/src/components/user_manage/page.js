@@ -4,7 +4,7 @@ import * as user_manage from "../../utils/user_manage";
 class page extends Component {
   constructor(props) {
     super(props);
-    this.state = { users: [], newUsername: "", password: "", isBlock: false };
+    this.state = { users: [], newUsername: "", password: "" };
   }
   async componentDidMount() {
     console.log("hello");
@@ -27,13 +27,19 @@ class page extends Component {
     const response = await user_manage.user_manage_addnew(user);
     const result = await user_manage.user_manage_getData();
     console.log("ket qua la day: ", result);
-    this.setState({ users: result });
+    this.setState({ users: result, newUsername: "", password: "" });
 
     // console.log(newUsername, password);
   };
-  onBlock = async id => {
-    console.log(id);
-    const response = await user_manage.user_manage_block(id);
+  onBlock = async data => {
+    console.log(data);
+    const response = await user_manage.user_manage_block(data);
+    const result = await user_manage.user_manage_getData();
+    console.log("ket qua la day: ", result);
+    this.setState({ users: result });
+  };
+  onDelete = async id => {
+    const response = await user_manage.user_manage_delete(id);
     const result = await user_manage.user_manage_getData();
     console.log("ket qua la day: ", result);
     this.setState({ users: result });
@@ -42,41 +48,34 @@ class page extends Component {
     let xhtml = null;
     if (this.state.users !== undefined) {
       xhtml = users.map((user, index) => {
+        const userBlock = { id: user._id, block: user.block };
         return (
           <React.Fragment>
             <tr>
               <th scope="row" style={{ textAlign: "center" }}>
                 {index + 1}
               </th>
-              <td>{user.fullname}</td>
+              <td>{user.fullname!==""?user.fullname:user.email}</td>
               <td>{user.facebook}</td>
               <td>
                 <button
                   type="button"
                   className={
-                    this.state.isBlock === false
-                      ? "btn btn-danger"
-                      : "btn btn-success"
+                    user.block === false ? "btn btn-danger" : "btn btn-success"
                   }
                   //className="btn btn-success"
                   style={{ margin: "0 1%" }}
-                  onClick={() => this.onBlock(user._id)}
+                  onClick={() => this.onBlock(userBlock)}
                 >
-                  {this.state.isBlock === false ? "Block" : "Unblock"}
+                  {user.block === false ? "Block" : "Unblock"}
                 </button>
                 <button
                   type="button"
-                  class="btn btn-primary"
+                  class="btn btn-warning"
                   style={{ margin: "0 1%" }}
+                  onClick={() => this.onDelete(user._id)}
                 >
-                  Primary
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  style={{ margin: "0 1%" }}
-                >
-                  Primary
+                  Delete
                 </button>
               </td>
             </tr>
@@ -124,7 +123,7 @@ class page extends Component {
                       className="form-control"
                       placeholder="example@gmail.com"
                       name="newUsername"
-                      value={this.state.username}
+                      value={this.state.newUsername}
                       onChange={this.onChange}
                       style={{ marginBottom: "1%" }}
                     />
@@ -133,7 +132,7 @@ class page extends Component {
                       className="form-control"
                       placeholder="password"
                       name="password"
-                      value={this.state.username}
+                      value={this.state.password}
                       onChange={this.onChange}
                     />
                   </div>
@@ -145,10 +144,7 @@ class page extends Component {
                     >
                       Close
                     </button>
-                    <button
-                      type="submit"
-                      class="btn btn-primary"
-                    >
+                    <button type="submit" class="btn btn-primary">
                       Save changes
                     </button>
                   </div>
