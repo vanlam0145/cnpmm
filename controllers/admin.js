@@ -8,8 +8,29 @@ module.exports = function (formidable, Club, Users) {
             router.get('/club', this.adminPageClub);
             router.put('/user/:id', this.adminPageUserPut);
 
+            router.post('/admin/user', this.adminAddUser);
             router.post('/uploadFile', this.uploadFile);
             router.post('/dashboard', this.adminPostPage);
+
+            router.delete('/admin/delete/user/:id', this.adminDeleteUser);
+        },
+        adminDeleteUser: async function (req, res) {
+            const result = await Users.deleteOne({ _id: req.params.id })
+            res.send(result)
+        },
+        adminAddUser: async function (req, res) {
+            if (req.body.username && req.body.password) {
+                const user = new Users();
+                user.username = req.body.username;
+                user.email = req.body.username;
+                user.password = user.encryptPassword(req.body.password);
+                user.save(err => {
+                    if (err)
+                        return res.send(err)
+                    else return res.send(user)
+                })
+            }
+            else return res.send("Thieu username hoac password")
         },
         adminPageUserPut: async function (req, res) {
             console.log(req.body, req.params.id)
