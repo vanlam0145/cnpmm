@@ -1,8 +1,13 @@
-import React, { Component } from "react";
-import Navbar from "../navbar/page";
-import queryString from "query-string";
-// import { group } from "../../utils/home";
 import "./group.css";
+
+import queryString from "query-string";
+import React, { Component } from "react";
+import Messages from "./messenger";
+import io from "socket.io-client";
+
+import Navbar from "../navbar/page";
+
+// import { group } from "../../utils/home";
 export default class ChatPage extends Component {
   constructor(props) {
     super(props);
@@ -10,61 +15,82 @@ export default class ChatPage extends Component {
       data: {},
       loading: true,
       filtercountry: -1,
-      groupname: queryString.parse(this.props.location.search).gn
+      groupname: queryString.parse(this.props.location.search).gn,
+      ENDPOINT: "http://localhost:4000",
+      response: "",
+      message: []
     };
   }
-  //   async componentDidMount() {
-  //     var query = queryString.parse(this.props.location.search);
-  //     console.log(query);
-  //     // if (query.token) {
-  //     //   window.localStorage.setItem("access_token", query.token);
-  //     //   this.props.history.push("/home");
-  //     // }
-  //     // const data = await group();
-  //     // if (data != false) this.setState({ data: data.data, loading: false, filterStatus: -1 });
-  //   }
-  onChange = event => {
-    var target = event.target;
-    var name = target.name;
-    console.log(name);
-    var value = target.type === "checkbox" ? target.checked : target.value;
-    console.log(value);
-    this.setState(
-      {
-        [name]: value
-      },
-      () => {
-        if (this.state.filtercountry != -1) {
-          const dataChunk = [];
-          let chunk = [];
-          const chunkSize = 2;
-          const length = this.state.data.res1.length;
-          for (let i = 0; i < length; i++) {
-            if (
-              chunk.length < chunkSize &&
-              this.state.data.res1[i].country == this.state.filtercountry
-            ) {
-              chunk.push(this.state.data.res1[i]);
-            }
-            if (chunk.length == chunkSize || i == length - 1) {
-              dataChunk.push(chunk);
-              chunk = [];
-            }
-          }
-          this.state.data = { ...this.state.data, chunks: dataChunk };
-          this.setState({ ...this.state });
-        } else {
-          const { data } = JSON.parse(localStorage.getItem("data"));
-          this.setState({ data: data });
-        }
-      }
-    );
-  };
+  componentDidMount() {
+    // const { ENDPOINT } = this.state;
+    // const socket = io(ENDPOINT);
+    // socket.on("abc", data => this.setState({ response: data }));
+    // var query = queryString.parse(this.props.location.search);
+    // console.log(query);
+    // if (query.token) {
+    //   window.localStorage.setItem("access_token", query.token);
+    //   this.props.history.push("/home");
+    // }
+    // const data = await group();
+    // if (data != false) this.setState({ data: data.data, loading: false, filterStatus: -1 });
+  }
+  // onChange = event => {
+  //   var target = event.target;
+  //   var name = target.name;
+  //   console.log(name);
+  //   var value = target.type === "checkbox" ? target.checked : target.value;
+  //   console.log(value);
+  //   this.setState(
+  //     {
+  //       [name]: value
+  //     },
+  //     () => {
+  //       if (this.state.filtercountry != -1) {
+  //         const dataChunk = [];
+  //         let chunk = [];
+  //         const chunkSize = 2;
+  //         const length = this.state.data.res1.length;
+  //         for (let i = 0; i < length; i++) {
+  //           if (
+  //             chunk.length < chunkSize &&
+  //             this.state.data.res1[i].country == this.state.filtercountry
+  //           ) {
+  //             chunk.push(this.state.data.res1[i]);
+  //           }
+  //           if (chunk.length == chunkSize || i == length - 1) {
+  //             dataChunk.push(chunk);
+  //             chunk = [];
+  //           }
+  //         }
+  //         this.state.data = { ...this.state.data, chunks: dataChunk };
+  //         this.setState({ ...this.state });
+  //       } else {
+  //         const { data } = JSON.parse(localStorage.getItem("data"));
+  //         this.setState({ data: data });
+  //       }
+  //     }
+  //   );
+  // };
   onLogout = () => {
     localStorage.removeItem("access_token");
     this.props.history.push("/login");
   };
+  onSubmitChat = e => {
+    e.preventDefault();
+    this.state.message.push({ text: e.target.msg.value, user: "hvl" });
+    console.log(this.state.message);
+    this.setState({ message: [...this.state.message] });
+    // this.setState(
+    //   {
+    //     message: [...this.state.message.push({ message: e.target.msg.value, name: "hvl" })]
+    //   },
+    //   () => {
+    //     console.log(this.state.message);
+    //   }
+    // );
+  };
   render() {
+    const { response } = this.state;
     return (
       <div>
         <Navbar></Navbar>
@@ -152,18 +178,22 @@ export default class ChatPage extends Component {
 
                     <div className="chat_area">
                       <ul id="messages" className="list-unstyled">
-                        {/* <!-- <li className="left">
-                                        <span className="chat-img1 pull-left">
-                                            <img src="http://placehold.it/300x300" className="img-circle" alt="">
-                                        </span>
-                                        <div className="chat-body1">
-                                            <span className="chat-name">
-                                                Username
-                                            </span>
-                                            <br>
-                                            Message Body
-                                        </div>
-                                    </li> --> */}
+                        {/* <Messages
+                          messages={[
+                            { text: "abc", user: "kaha" },
+                            { text: "me", user: "hvl" },
+                            { text: "abc", user: "kaha" },
+                            { text: "me", user: "hvl" },
+                            { text: "abc", user: "kaha" },
+                            { text: "me", user: "hvl" },
+                            { text: "abc", user: "kaha" },
+                            { text: "me", user: "hvl" },
+                            { text: "abc", user: "kaha" },
+                            { text: "me", user: "hvl" }
+                          ]}
+                          name={"hvl"}
+                        /> */}
+                        <Messages messages={this.state.message} name={"hvl"} />
                       </ul>
                       {/* <script id="message-template" type="text/template">
                                     <li className="left">
@@ -182,7 +212,7 @@ export default class ChatPage extends Component {
                     </div>
 
                     <div className="message_write">
-                      <form id="message-form" method="post">
+                      <form id="message-form" onSubmit={this.onSubmitChat}>
                         {/* <input type="hidden" id="groupName" value="<%= groupName %>">
                                     <input type="hidden" id="sender" value="<%= user.username||user.fullname %>">
                                     <input type="hidden" id="senderImage" value="<%= user.userImage%>"> */}
@@ -192,10 +222,11 @@ export default class ChatPage extends Component {
                           id="msg"
                           placeholder="Type a message"
                         ></textarea>
-                        <div className="clearfix"></div>
+                        {/* <div className="clearfix"></div> */}
                         <div className="chat_bottom">
                           <button
                             id="send-message"
+                            type="submit"
                             className="pull-right btn btn-primary"
                             style={{ background: "#4aa1f3", border: "#4aa1f3" }}
                           >

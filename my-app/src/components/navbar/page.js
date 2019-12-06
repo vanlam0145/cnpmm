@@ -134,7 +134,9 @@ export default class NavbarPage extends Component {
               </li>
 
               <li>
-                <a onClick={this.props.onLogout}>Logout</a>
+                <a role="button" onClick={this.props.onLogout}>
+                  Logout
+                </a>
               </li>
               <li className="dropdown">
                 <a
