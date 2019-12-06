@@ -24,7 +24,7 @@ class LoginPage extends Component {
       window.localStorage.setItem("access_token", query.token);
       this.props.history.push("/home");
     }
-    if(checkToken()){
+    if (checkToken()) {
       this.props.history.push("/home")
     }
   }
@@ -51,10 +51,10 @@ class LoginPage extends Component {
     const islogin = await lg.login({ username, password, cbRemember });
     console.log(islogin);
     console.log("cooki: ", document.cookie);
-    const result = checkToken();
+    //const result = checkToken();
     console.log("checktoken: ", checkToken());
     if (checkToken() !== undefined) {
-      await this.props.history.push("/home");
+      this.props.history.push("/home");
     } else this.setState({ error: "dang nhap that bai", loading: false });
   }
   render() {

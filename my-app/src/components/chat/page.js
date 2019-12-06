@@ -2,17 +2,14 @@ import "./group.css";
 
 import queryString from "query-string";
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
+
 import Messages from "./messenger";
 import io from "socket.io-client";
 
 import Navbar from "../navbar/page";
-
-import { group } from "../../utils/group";
 export default class ChatPage extends Component {
   constructor(props) {
     super(props);
-    this.myRef = React.createRef();
     this.state = {
       data: {},
       loading: true,
@@ -22,113 +19,52 @@ export default class ChatPage extends Component {
       response: "",
       message: [],
     };
+    this.socket = null;
   }
 
-  async componentDidMount(e) {
-    const data = await group(this.state.groupname);
-    console.log(data)
-    if (data != false) this.setState({ data: data.data, loading: false, filterStatus: -1 });
+  componentWillMount(e) {
+    const user = JSON.parse(localStorage.getItem("data")).data.user
     const { ENDPOINT } = this.state;
-    const socket = io(ENDPOINT);
-    socket.on('connect', () => {
+    this.socket = io(ENDPOINT);
+    this.socket.on('connect', () => {
       const params = {
         room: this.state.groupname,
-        name: this.state.data.user.fullname
+        name: user.fullname
       }
-      socket.emit('join', params, () => {
+      this.socket.emit('join', params, () => {
         console.log('User has join this channel');
       })
     });
-    socket.on('newMessage', (message) => {
-      console.log(message)
+    this.socket.on('newMessage', (message) => {
+      this.addMessage(message);
     })
-    this.setState()
-    //console.log(this.myRef.current.ownerDocument.body);
-
-    // var socket = io();
-    // var room = $('#groupName').val();
-    // var sender = $('#sender').val();
-    // var senderImage = $('#senderImage').val();
-    // socket.on('connect', function () {
-    //   var params = {
-    //     room: room,
-    //     name: sender,
-    //   }
-    //   socket.emit('join', params, function () {
-    //     console.log('User has join this channel');
-    //   })
-    // })
-
-    //socket.on("abc", data => console.log("hihi"));
-    // var query = queryString.parse(this.props.location.search);
-    // console.log(query);
-    // if (query.token) {
-    //   window.localStorage.setItem("access_token", query.token);
-    //   this.props.history.push("/home");
-    // }
+    this.setState({ loading: false, filterStatus: -1 });
 
   }
-  // onChange = event => {
-  //   var target = event.target;
-  //   var name = target.name;
-  //   console.log(name);
-  //   var value = target.type === "checkbox" ? target.checked : target.value;
-  //   console.log(value);
-  //   this.setState(
-  //     {
-  //       [name]: value
-  //     },
-  //     () => {
-  //       if (this.state.filtercountry != -1) {
-  //         const dataChunk = [];
-  //         let chunk = [];
-  //         const chunkSize = 2;
-  //         const length = this.state.data.res1.length;
-  //         for (let i = 0; i < length; i++) {
-  //           if (
-  //             chunk.length < chunkSize &&
-  //             this.state.data.res1[i].country == this.state.filtercountry
-  //           ) {
-  //             chunk.push(this.state.data.res1[i]);
-  //           }
-  //           if (chunk.length == chunkSize || i == length - 1) {
-  //             dataChunk.push(chunk);
-  //             chunk = [];
-  //           }
-  //         }
-  //         this.state.data = { ...this.state.data, chunks: dataChunk };
-  //         this.setState({ ...this.state });
-  //       } else {
-  //         const { data } = JSON.parse(localStorage.getItem("data"));
-  //         this.setState({ data: data });
-  //       }
-  //     }
-  //   );
-  // };
-  onLogout = () => {
-    localStorage.removeItem("access_token");
-    this.props.history.push("/login");
-  };
-  onSubmitChat = e => {
-    e.preventDefault();
-
-    this.state.message.push({ text: e.target.msg.value, user: "hvl" });
+  addMessage = (Me) => {
+    this.state.message.push({ text: Me.text, user: Me.from });
     console.log(this.state.message);
     this.setState({ message: [...this.state.message] });
-    // this.setState(
-    //   {
-    //     message: [...this.state.message.push({ message: e.target.msg.value, name: "hvl" })]
-    //   },
-    //   () => {
-    //     console.log(this.state.message);
-    //   }
-    // );
   };
+  sendnewMessage = (e) => {
+    e.preventDefault();
+    const message = {
+      text: e.target.msg.value,
+      room: this.state.groupname,
+      from: JSON.parse(localStorage.getItem("data")).data.user.fullname,
+      fromimage: JSON.parse(localStorage.getItem("data")).data.user.userImage
+    }
+    if (e.target.msg.value) {
+      this.socket.emit("createMessage", message, () => {
+        console.log("nt")
+      }); //gửi event về server
+      e.target.msg.value = "";
+    }
+  }
   render() {
-    const { response } = this.state;
     return (
-      <div ref={this.myRef} >
-        <Navbar></Navbar>
+      <div  >
+        <Navbar fullname={JSON.parse(localStorage.getItem("data")).data.user.fullname}></Navbar>
         <div className="col-md-12">
           <div className="col-md-12">
             <div className="chat_container">
@@ -213,41 +149,12 @@ export default class ChatPage extends Component {
 
                     <div className="chat_area">
                       <ul id="messages" className="list-unstyled">
-                        {/* <Messages
-                          messages={[
-                            { text: "abc", user: "kaha" },
-                            { text: "me", user: "hvl" },
-                            { text: "abc", user: "kaha" },
-                            { text: "me", user: "hvl" },
-                            { text: "abc", user: "kaha" },
-                            { text: "me", user: "hvl" },
-                            { text: "abc", user: "kaha" },
-                            { text: "me", user: "hvl" },
-                            { text: "abc", user: "kaha" },
-                            { text: "me", user: "hvl" }
-                          ]}
-                          name={"hvl"}
-                        /> */}
-                        <Messages messages={this.state.message} name={"hvl"} />
+                        <Messages messages={this.state.message} name={JSON.parse(localStorage.getItem("data")).data.user.fullname} />
                       </ul>
-                      {/* <script id="message-template" type="text/template">
-                                    <li className="left">
-                                            <span className="chat-img1 pull-left">
-                                                    <img src="" className="img-circle" alt=""/>
-                                            </span>
-                                            <div className="chat-body1">
-                                                <span className="chat-name">
-                                                    sender
-                                                </span>
-                                                <br>
-                                                text
-                                            </div>
-                                        </li>
-                                    </script> */}
                     </div>
 
                     <div className="message_write">
-                      <form id="message-form" onSubmit={this.onSubmitChat}>
+                      <form id="message-form" onSubmit={this.sendnewMessage}>
                         {/* <input type="hidden" id="groupName" value="<%= groupName %>">
                                     <input type="hidden" id="sender" value="<%= user.username||user.fullname %>">
                                     <input type="hidden" id="senderImage" value="<%= user.userImage%>"> */}

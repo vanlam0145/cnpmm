@@ -8,19 +8,12 @@ export default class HomePage extends Component {
     super(props);
     this.state = { data: null, loading: true, filtercountry: -1 };
   }
-  async componentDidMount() {
-    const date = new Date();
-    let time = date.getTime();
-    console.log(time);
-    const data = await group();
-    const date2 = new Date();
-    const time2 = date2.getTime();
-    console.log(time2)
-    console.log(time2 - time)
-    console.log(data)
+  componentDidMount() {
+    group().then(data => {
+      if (data != false)
+        this.setState({ ...this.state, data: data.data, loading: false, filterStatus: -1 });
+    });
 
-    if (data != false)
-      this.setState({ ...this.state, data: data.data, loading: false, filterStatus: -1 });
   }
   onChange = event => {
     var target = event.target;
@@ -59,17 +52,17 @@ export default class HomePage extends Component {
       }
     );
   };
-  onLogout = () => {
-    localStorage.removeItem("access_token");
-    this.props.history.push("/login");
-  };
+  toChat = () => {
+    this.props.history.push('group/')
+
+  }
   render() {
     if (this.state.loading) {
       return <Spin size={64} />;
     } else {
       return (
         <div>
-          <Navbar fullname={this.state.data.user.fullname} onLogout={this.onLogout}></Navbar>
+          <Navbar fullname={this.state.data.user.fullname} ></Navbar>
           <div className="col-md-12">
             <form action="#" method="post" id="frmSearch">
               <div className="form-group ad-30">
@@ -149,6 +142,7 @@ export default class HomePage extends Component {
                                     <a
                                       href={`/group/?gn=` + val.name}
                                       style={{ textDecoration: "none" }}
+                                    //onClick={() => this.toChat()}
                                     >
                                       <div className="thumbnail">
                                         <div

@@ -1,21 +1,21 @@
 const jwt = require("jsonwebtoken");
-module.exports = function(async, Club, _, Users) {
+module.exports = function (async, Club, _, Users) {
   return {
-    SetRouting: function(router) {
+    SetRouting: function (router) {
       router.get("/home", this.homePage);
       router.post("/home", this.postHomePage);
     },
-    homePage: async function(req, res) {
-      let decode = jwt.verify(req.headers.access_token.split("|")[1], "key");
+    homePage: async function (req, res) {
+      const decode = jwt.verify(req.headers.access_token.split("|")[1], "key");
       let user = await Users.findById(decode.id).lean();
       async.parallel(
         [
-          function(callback) {
+          function (callback) {
             Club.find({}, (err, results) => {
               callback(err, results);
             });
           },
-          function(callback) {
+          function (callback) {
             Club.aggregate(
               [
                 {
@@ -29,7 +29,7 @@ module.exports = function(async, Club, _, Users) {
               }
             );
           },
-          function(callback) {
+          function (callback) {
             Users.findById(decode.id)
               .populate("request.userId")
               .exec((err, result) => {
@@ -58,10 +58,10 @@ module.exports = function(async, Club, _, Users) {
         }
       );
     },
-    postHomePage: function(req, res) {
+    postHomePage: function (req, res) {
       async.parallel(
         [
-          function(callback) {
+          function (callback) {
             Club.update(
               {
                 _id: req.body.id,

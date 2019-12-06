@@ -16,7 +16,7 @@ const { Users } = require("./helpers/UsersClass");
 const { Global } = require("./helpers/Global");
 const morgan = require("morgan");
 const cors = require("cors");
-container.resolve(function(users, _, admin, home, group, routerExportReqToDoc) {
+container.resolve(function (users, _, admin, home, group, routerExportReqToDoc) {
   const app = SetupExpress();
 
   function SetupExpress() {
@@ -32,8 +32,8 @@ container.resolve(function(users, _, admin, home, group, routerExportReqToDoc) {
     // if (process.env.PORT) {
     const server = http.createServer(app);
     secureIO = socketIO(server);
-    server.listen(port, function() {
-      console.log(`server run on port : 3000!!!`);
+    server.listen(port, function () {
+      console.log(`server run on port : ${port}!!!`);
     });
     // } else {
     //   app.set('port', port);
@@ -67,7 +67,7 @@ container.resolve(function(users, _, admin, home, group, routerExportReqToDoc) {
     require("./passport/passport-google");
     app.use(
       morgan("common", {
-        skip: function(req, res) {
+        skip: function (req, res) {
           if (req.url == "/_ah/health") {
             return true;
           } else {

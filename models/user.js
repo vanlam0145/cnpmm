@@ -23,6 +23,7 @@ const userSchema = mongoose.Schema({
         friendName: { type: String, default: '' },
     }],
     totalRequest: { type: Number, default: 0 },
+    block: { type: Boolean, default: false }
 })
 userSchema.methods.encryptPassword = function (password) {
     var salt = bcryptjs.genSaltSync(10);
