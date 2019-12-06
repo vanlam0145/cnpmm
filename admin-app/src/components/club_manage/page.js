@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Navbar from "../navbar/page";
-import * as user_manage from "../../utils/user_manage";
+import * as club_manage from "../../utils/club_manage";
 class page extends Component {
   constructor(props) {
     super(props);
@@ -8,7 +8,7 @@ class page extends Component {
   }
   async componentDidMount() {
     console.log("hello");
-    const result = await user_manage.user_manage_getData();
+    const result = await club_manage.club_manage_getData();
     console.log("ket qua la day: ", result);
     this.setState({ users: result });
   }
@@ -23,7 +23,7 @@ class page extends Component {
     e.preventDefault();
     console.log("vao day");
     const { newUsername, password } = this.state;
-    const result = await user_manage.user_manage_getData();
+    const result = await club_manage.club_manage_getData();
     console.log("ket qua la day: ", result);
     this.setState({ users: result });
 
@@ -39,8 +39,8 @@ class page extends Component {
               <th scope="row" style={{ textAlign: "center" }}>
                 {index + 1}
               </th>
-              <td>{user.fullname}</td>
-              <td>{user.facebook}</td>
+              <td>{user.name}</td>
+              <td>{user.country}</td>
               <td>
                 <button
                   type="button"
@@ -151,10 +151,10 @@ class page extends Component {
                   #
                 </th>
                 <th scope="col" style={{ textAlign: "center" }}>
-                  FullName
+                  Name
                 </th>
                 <th scope="col" style={{ textAlign: "center" }}>
-                  FaceBook
+                  Contry
                 </th>
                 <th scope="col" style={{ textAlign: "center" }}>
                   Action

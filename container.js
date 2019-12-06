@@ -11,17 +11,18 @@ const simpleDependecies = [
   ['formidable', 'formidable'],
   ['Club', './models/clubs'],
   ['Users', './models/user'],
-  ['async', 'async']
+  ['async', 'async'],
+  ['jwt', 'jsonwebtoken']
 ];
-simpleDependecies.forEach(function(val) {
-  container.register(val[0], function() {
+simpleDependecies.forEach(function (val) {
+  container.register(val[0], function () {
     return require(val[1]);
   });
 });
 container.load(path.join(__dirname, '/controllers'));
 container.load(path.join(__dirname, '/helpers'));
 
-container.register('controllers', function() {
+container.register('controllers', function () {
   return container;
 });
 

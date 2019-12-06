@@ -1,9 +1,10 @@
 import axios from "axios";
 import checkToken from "./CheckToken"
-const access_token = localStorage.getItem("access_token");
+const access_token = checkToken();
+console.log(access_token)
 var instansce = axios.create({
-  baseURL: "",
-  headers: { access_token: `${checkToken()}` }
+
+  headers: { access_token: `${access_token}` }
 });
 const SERVER_URL = "";
 const group = async () => {

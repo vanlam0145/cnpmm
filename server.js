@@ -32,11 +32,7 @@ container.resolve(function (users, _, admin, home, group, routerExportReqToDoc) 
     // if (process.env.PORT) {
     const server = http.createServer(app);
     secureIO = socketIO(server);
-<<<<<<< HEAD
-    server.listen(port, function() {
-=======
     server.listen(port, function () {
->>>>>>> 6bdac183e4d1f82473c2182458dffdad4f55d929
       console.log(`server run on port : ${port}!!!`);
     });
     // } else {

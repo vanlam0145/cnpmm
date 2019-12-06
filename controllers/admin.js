@@ -19,6 +19,7 @@ module.exports = function (formidable, Club, Users) {
             res.send(result)
         },
         adminAddUser: async function (req, res) {
+            console.log(req.body)
             if (req.body.username && req.body.password) {
                 const user = new Users();
                 user.username = req.body.username;

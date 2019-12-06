@@ -14,6 +14,7 @@ const login = async data => {
 
     if (response.status === 200 && response.data) {
       let jwt = response.data;
+
       console.log(jwt);
       if (data.cbRemember == true) {
         console.log("cc");

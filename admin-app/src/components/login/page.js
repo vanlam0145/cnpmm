@@ -24,7 +24,7 @@ class LoginPage extends Component {
       window.localStorage.setItem("access_token", query.token);
       this.props.history.push("/home");
     }
-    if(checkToken()){
+    if (checkToken()) {
       this.props.history.push("/home")
     }
   }
