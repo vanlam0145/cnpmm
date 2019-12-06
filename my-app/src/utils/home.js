@@ -1,6 +1,5 @@
 import axios from "axios";
 import checkToken from "./CheckToken"
-const access_token = localStorage.getItem("access_token");
 var instansce = axios.create({
   baseURL: "http://localhost:4000",
   headers: { access_token: `${checkToken()}` }

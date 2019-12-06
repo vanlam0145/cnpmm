@@ -26,6 +26,7 @@ export default class ChatPage extends Component {
 
   async componentDidMount(e) {
     const data = await group(this.state.groupname);
+    console.log(data)
     if (data != false) this.setState({ data: data.data, loading: false, filterStatus: -1 });
     const { ENDPOINT } = this.state;
     const socket = io(ENDPOINT);

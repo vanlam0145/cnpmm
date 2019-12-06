@@ -7,6 +7,7 @@ const getCookie = () => {
       c = c.substring(1);
     }
     if (c.indexOf(name) === 0) {
+      console.log(c.substring(6))
       return c.substring(6);
     } else {
       // alert("Phiên làm việc đã hết hẹn, vui lòng đăng nhập lại!")

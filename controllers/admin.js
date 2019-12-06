@@ -1,21 +1,26 @@
 const path = require('path');
 const fs = require('fs');
-
-module.exports = function (formidable, Club) {
+module.exports = function (formidable, Club, Users) {
     return {
         SetRouting: function (router) {
             router.get('/dashboard', this.adminPage);
-            router.get('/users', this.adminPage)
+            router.get('/users', this.adminPageUser)
+            router.get('/club', this.adminPageClub);
+            router.put('/user/:id', this.adminPageUserPut);
 
             router.post('/uploadFile', this.uploadFile);
             router.post('/dashboard', this.adminPostPage);
         },
-        adminPageUser: function (req, res) {
-            if (req.isAuthenticated()) {
-                res.render('admin/dashboard');
-            } else {
-                res.send("chua login");
-            }
+        adminPageUserPut: async function (req, res) {
+            console.log(req.body, req.params.id)
+            const resul = await Users.findOneAndUpdate({ _id: req.params.id }, req.body)
+            res.json(resul);
+        },
+        adminPageClub: async function (req, res) {
+            res.json(await Club.find({}))
+        },
+        adminPageUser: async function (req, res) {
+            res.json(await Users.find({}))
         },
         adminPage: function (req, res) {
             if (req.isAuthenticated()) {
