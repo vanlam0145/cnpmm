@@ -23,17 +23,25 @@ const user_manage_addnew = async (data) => {
     return false;
   }
 };
-const user_manage_block = async id => {
+const user_manage_block = async data => {
   try {
-    var block = true
-    let response = await axios.put(`http://localhost:4001/user/${id}`, block);
+    const {id, block}=data
+    console.log(block)
+    var setblock = {"block": !block}
+    let response = await axios.put(`http://localhost:4001/user/${id}`, setblock);
     console.log(response);
     return response.data;
   } catch (e) {
     console.log(e);
   }
 };
-const logout = () => {
-  localStorage.removeItem("access_token");
-};
-export { user_manage_getData, user_manage_block, user_manage_addnew };
+const user_manage_delete = async id => {
+    try {
+      let response = await axios.delete(`http://localhost:4001/admin/delete/user/${id}`);
+      console.log(response);
+      return response.data;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+export { user_manage_getData, user_manage_block, user_manage_addnew, user_manage_delete };
