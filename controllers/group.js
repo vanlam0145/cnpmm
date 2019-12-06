@@ -1,14 +1,16 @@
+const jwt = require("jsonwebtoken");
 module.exports = function (Users, async) {
     return {
         SetRouting: function (router) {
             router.get('/group/:name', this.groupPage);
             router.post('/group/:name', this.groupPostPage);
         },
-        groupPage: function (req, res) {
-            const name = req.params.name;
+        groupPage: async function (req, res) {
+            const decode = jwt.verify(req.headers.access_token.split("|")[1], "key");
+            let user = await Users.findById(decode.id).lean();
             async.parallel([
                 function (callback) {
-                    Users.findOne({ 'email': req.user.email })
+                    Users.findOne({ 'email': user.email })
                         .populate('request.userId')
                         .exec((err, result) => {
                             callback(err, result);
@@ -17,7 +19,7 @@ module.exports = function (Users, async) {
             ], (err, result) => {
                 const result1 = result[0];
                 //console.log(result[0].request[0].userId);
-                res.render('groupChat/group', { title: 'Chat - Group', user: req.user, groupName: name, data: result1 });
+                res.json({ title: 'Chat - Group', user: user, groupName: req.params.name, data: result1 });
             })
 
         },

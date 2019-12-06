@@ -17,13 +17,13 @@ module.exports = function (secureIO, Users) {
                 text: message.text,
                 room: message.room,
                 from: message.from,
-                fromimage:message.fromimage,
+                fromimage: message.fromimage,
             });
             callback();
         });
         socket.on('disconnect', () => {
             var user = users.RemoveUser(socket.id);
-            if(user){
+            if (user) {
                 secureIO.to(user.room).emit('usersList', users.GetUsersList(user.room));
             }
         })

@@ -5,9 +5,17 @@ module.exports = function (formidable, Club) {
     return {
         SetRouting: function (router) {
             router.get('/dashboard', this.adminPage);
+            router.get('/users', this.adminPage)
 
             router.post('/uploadFile', this.uploadFile);
             router.post('/dashboard', this.adminPostPage);
+        },
+        adminPageUser: function (req, res) {
+            if (req.isAuthenticated()) {
+                res.render('admin/dashboard');
+            } else {
+                res.send("chua login");
+            }
         },
         adminPage: function (req, res) {
             if (req.isAuthenticated()) {

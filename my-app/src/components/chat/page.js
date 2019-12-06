@@ -2,15 +2,17 @@ import "./group.css";
 
 import queryString from "query-string";
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import Messages from "./messenger";
 import io from "socket.io-client";
 
 import Navbar from "../navbar/page";
 
-// import { group } from "../../utils/home";
+import { group } from "../../utils/group";
 export default class ChatPage extends Component {
   constructor(props) {
     super(props);
+    this.myRef = React.createRef();
     this.state = {
       data: {},
       loading: true,
@@ -18,21 +20,52 @@ export default class ChatPage extends Component {
       groupname: queryString.parse(this.props.location.search).gn,
       ENDPOINT: "http://localhost:4000",
       response: "",
-      message: []
+      message: [],
     };
   }
-  componentDidMount() {
-    // const { ENDPOINT } = this.state;
-    // const socket = io(ENDPOINT);
-    // socket.on("abc", data => this.setState({ response: data }));
+
+  async componentDidMount(e) {
+    const data = await group(this.state.groupname);
+    if (data != false) this.setState({ data: data.data, loading: false, filterStatus: -1 });
+    const { ENDPOINT } = this.state;
+    const socket = io(ENDPOINT);
+    socket.on('connect', () => {
+      const params = {
+        room: this.state.groupname,
+        name: this.state.data.user.fullname
+      }
+      socket.emit('join', params, () => {
+        console.log('User has join this channel');
+      })
+    });
+    socket.on('newMessage', (message) => {
+      console.log(message)
+    })
+    this.setState()
+    //console.log(this.myRef.current.ownerDocument.body);
+
+    // var socket = io();
+    // var room = $('#groupName').val();
+    // var sender = $('#sender').val();
+    // var senderImage = $('#senderImage').val();
+    // socket.on('connect', function () {
+    //   var params = {
+    //     room: room,
+    //     name: sender,
+    //   }
+    //   socket.emit('join', params, function () {
+    //     console.log('User has join this channel');
+    //   })
+    // })
+
+    //socket.on("abc", data => console.log("hihi"));
     // var query = queryString.parse(this.props.location.search);
     // console.log(query);
     // if (query.token) {
     //   window.localStorage.setItem("access_token", query.token);
     //   this.props.history.push("/home");
     // }
-    // const data = await group();
-    // if (data != false) this.setState({ data: data.data, loading: false, filterStatus: -1 });
+
   }
   // onChange = event => {
   //   var target = event.target;
@@ -77,6 +110,7 @@ export default class ChatPage extends Component {
   };
   onSubmitChat = e => {
     e.preventDefault();
+
     this.state.message.push({ text: e.target.msg.value, user: "hvl" });
     console.log(this.state.message);
     this.setState({ message: [...this.state.message] });
@@ -92,7 +126,7 @@ export default class ChatPage extends Component {
   render() {
     const { response } = this.state;
     return (
-      <div>
+      <div ref={this.myRef} >
         <Navbar></Navbar>
         <div className="col-md-12">
           <div className="col-md-12">
@@ -296,7 +330,7 @@ export default class ChatPage extends Component {
             </div>
           </div>
         </div>
-      </div>
+      </div >
     );
   }
 }

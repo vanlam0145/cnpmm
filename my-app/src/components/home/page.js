@@ -9,7 +9,15 @@ export default class HomePage extends Component {
     this.state = { data: null, loading: true, filtercountry: -1 };
   }
   async componentDidMount() {
+    const date = new Date();
+    let time = date.getTime();
+    console.log(time);
     const data = await group();
+    const date2 = new Date();
+    const time2 = date2.getTime();
+    console.log(time2)
+    console.log(time2 - time)
+    console.log(data)
 
     if (data != false)
       this.setState({ ...this.state, data: data.data, loading: false, filterStatus: -1 });

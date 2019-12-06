@@ -9,7 +9,7 @@ const group = async () => {
   const GROUP_ENDPOINT = `${SERVER_URL}/home`;
   try {
     let res = await instansce.get(GROUP_ENDPOINT);
-    localStorage.setItem("data", JSON.stringify(res));
+    //localStorage.setItem("data", JSON.stringify(res));
     return res;
   } catch (e) {
     console.log(e);
