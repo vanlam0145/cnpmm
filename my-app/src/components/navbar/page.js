@@ -12,7 +12,7 @@ class NavbarPage extends Component {
     deleteCookie("token");
     this.props.history.push("/login");
   };
-  componentDidMount() {}
+  componentDidMount() { }
   render() {
     return (
       <nav className="navbar navbar-default">
@@ -45,7 +45,7 @@ class NavbarPage extends Component {
                   <span className="glyphicon fa fa-bell nav-glyphicon"></span>
                   {/* <b className="caret"></b> */}
                   {/* <% if(data.totalRequest>0){ %> */}
-                  <span className="label label-primary nav-label-icon">hi</span>
+                  <span className="label label-primary nav-label-icon">0</span>
                   {/* <% } else { %>
                         <span className="label label-primary nav-label-icon" style="display:none"></span>
                         <% }%> */}

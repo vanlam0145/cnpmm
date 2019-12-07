@@ -42,16 +42,20 @@ passport.use(
   new LocalStategy((username, password, done) => {
     User.findOne({ email: username }, (err, user) => {
       if (err) {
-        return done(null, { haha: "haha" });
+        return done(null, { haha: "not user" });
       }
       if (!user || !user.comparePassword(password)) {
-        return done(null, { haha: "haha" });
+        return done(null, { haha: "wrong pass" });
       }
-      var token = jwt.sign({ id: user._id }, "key");
-      user.token = _.join(["LC", token], "|");
-      // var decoded = jwt.verify(token, 'shhhhh');
-      console.log(user);
-      return done(null, user);
+      console.log(user)
+      if (user.block != true) {
+        var token = jwt.sign({ id: user._id }, "key");
+        user.token = _.join(["LC", token], "|");
+        // var decoded = jwt.verify(token, 'shhhhh');
+        //console.log(user);
+        return done(null, user);
+      }
+      else return done(null, { haha: "you account hasd bloc" })
     });
   })
 );

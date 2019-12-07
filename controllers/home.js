@@ -6,7 +6,7 @@ module.exports = function (jwt, async, Club, _, Users) {
       router.post("/home", this.postHomePage);
     },
     homePage: async function (req, res) {
-      console.log(access_token ? "kh null" : "null")
+      console.log(req.headers.access_token ? "kh null" : "null")
       const access_token = req.headers.access_token.split("|")[1]
       if (access_token) {
         const decode = await jwt.verify(access_token, "key");

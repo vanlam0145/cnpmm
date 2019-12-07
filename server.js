@@ -21,7 +21,7 @@ container.resolve(function (users, _, admin, home, group, routerExportReqToDoc) 
 
   function SetupExpress() {
     const app = express();
-    const port = process.env.PORT || 4001;
+    const port = process.env.PORT || 4000;
     mongoose
       .connect("mongodb+srv://cross:123xyz@cluster0-lstqi.mongodb.net/chat?retryWrites=true", {
         useNewUrlParser: true

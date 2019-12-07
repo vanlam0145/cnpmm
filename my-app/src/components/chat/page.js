@@ -89,7 +89,7 @@ export default class ChatPage extends Component {
                             </div>
                             <div className="content">
                               <div className="main">
-                                <h3 className="name">haha</h3>
+                                <h3 className="name">{JSON.parse(localStorage.getItem("data")).data.user.fullname}</h3>
                                 <p className="profession-online">
                                   <i className="fa fa-circle online" aria-hidden="true"></i>
                                   Online
