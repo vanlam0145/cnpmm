@@ -5,7 +5,6 @@ const login = async data => {
   const LOGIN_ENDPOINT = `${SERVER_URL}/`;
 
   try {
-    console.log(data);
     const { username, password } = data;
     const user = { username: username, password: password };
     let response = await axios.post(LOGIN_ENDPOINT, user);
