@@ -8,17 +8,18 @@ class NavbarPage extends Component {
     super(props);
     this.state = { data: {} };
   }
-  userManage=()=>{
+  userManage = () => {
     this.props.history.push("/user_manage")
   }
-  clubManage=()=>{
+  clubManage = () => {
     this.props.history.push("/club_manage")
   }
   Logout = () => {
+    console.log("lo")
     deleteCookie("token");
     this.props.history.push("/login");
   };
-  componentDidMount() {}
+  componentDidMount() { }
   render() {
     return (
       <nav className="navbar navbar-default">
@@ -156,10 +157,10 @@ class NavbarPage extends Component {
                 </ul>
               </li>
               <li>
-                <a role="button" onClick={()=>this.userManage()}>Quan ly nguoi dung</a>
+                <a role="button" onClick={() => this.userManage()}>Quan ly nguoi dung</a>
               </li>
               <li>
-                <a role="button" onClick={()=>this.clubManage()}>Quan ly club</a>
+                <a role="button" onClick={() => this.clubManage()}>Quan ly club</a>
               </li>
               <li>
                 <a role="button" onClick={() => this.Logout()}>
