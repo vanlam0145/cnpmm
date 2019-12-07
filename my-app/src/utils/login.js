@@ -22,7 +22,7 @@ const login = async data => {
         document.cookie = `token=${jwt}`;
       }
     }
-    return true;
+    return response.data;
   } catch (e) {
     console.log(e);
     return false;

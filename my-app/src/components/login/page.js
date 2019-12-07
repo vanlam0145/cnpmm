@@ -21,7 +21,7 @@ class LoginPage extends Component {
   componentDidMount() {
     var query = queryString.parse(this.props.location.search);
     if (query.token) {
-      window.localStorage.setItem("access_token", query.token);
+      document.cookie = `token=${query.token}`;
       this.props.history.push("/home");
     }
     if (checkToken()) {
@@ -53,9 +53,9 @@ class LoginPage extends Component {
     console.log("cooki: ", document.cookie);
     //const result = checkToken();
     console.log("checktoken: ", checkToken());
-    if (checkToken() !== undefined) {
+    if (checkToken() !== null) {
       this.props.history.push("/home");
-    } else this.setState({ error: "dang nhap that bai", loading: false });
+    } else if (islogin === false) this.setState({ error: "dang nhap that bai", loading: false });
   }
   render() {
     const error = error => {

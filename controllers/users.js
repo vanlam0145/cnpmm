@@ -1,8 +1,8 @@
 "use strict";
 var jwt = require("jsonwebtoken");
-module.exports = function(_, passport, User) {
+module.exports = function (_, passport, User) {
   return {
-    SetRouting: function(router) {
+    SetRouting: function (router) {
       router.get("/", this.indexPage);
       router.get("/signup", this.getSignup);
 
@@ -10,31 +10,31 @@ module.exports = function(_, passport, User) {
       router.post("/test", this.postTestPage);
 
       router.get("/auth/facebook", this.getFacebookLogin);
-      router.get("/auth/facebook/callback", this.facebookLogin, function(req, res) {
+      router.get("/auth/facebook/callback", this.facebookLogin, function (req, res) {
         console.log(req.user.token);
         res.redirect("http://localhost:3000/login?token=" + req.user.token);
       });
       router.get("/auth/google", this.getGoogleLogin);
-      router.get("/auth/google/callback", this.GoogleLogin, function(req, res) {
+      router.get("/auth/google/callback", this.GoogleLogin, function (req, res) {
         res.redirect("http://localhost:3000/login?token=" + req.user.token);
       });
 
-      router.post("/", this.postSignin, function(req, res) {
+      router.post("/", this.postSignin, function (req, res) {
         if (req.user.token) res.json(req.user.token);
         else res.json(false);
       });
-      router.post("/signup", this.postSignup, function(req, res) {
+      router.post("/signup", this.postSignup, function (req, res) {
         if (req.user.code == 1) res.json(req.user);
         else res.json(req.user.token);
       });
     },
-    testPage: function(req, res) {
+    testPage: function (req, res) {
       res.render("loginWithFireBase");
     },
-    postTestPage: function(req, res) {
+    postTestPage: function (req, res) {
       console.log("log" + req.body.email + " " + req.body.password);
     },
-    indexPage: function(req, res) {
+    indexPage: function (req, res) {
       const errors = req.flash("error");
       return res.render("index", {
         title: "chat test",
@@ -43,7 +43,7 @@ module.exports = function(_, passport, User) {
       });
     },
 
-    getSignup: function(req, res) {
+    getSignup: function (req, res) {
       const errors = req.flash("error");
       return res.render("signup", {
         title: "chat test",

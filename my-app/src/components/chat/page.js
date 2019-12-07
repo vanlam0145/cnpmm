@@ -51,7 +51,7 @@ export default class ChatPage extends Component {
     const message = {
       text: e.target.msg.value,
       room: this.state.groupname,
-      from: JSON.parse(localStorage.getItem("data")).data.user.fullname,
+      from: JSON.parse(localStorage.getItem("data")).data.user.email,
       fromimage: JSON.parse(localStorage.getItem("data")).data.user.userImage
     }
     if (e.target.msg.value) {
@@ -64,7 +64,7 @@ export default class ChatPage extends Component {
   render() {
     return (
       <div  >
-        <Navbar fullname={JSON.parse(localStorage.getItem("data")).data.user.fullname}></Navbar>
+        <Navbar fullname={JSON.parse(localStorage.getItem("data")).data.user.email}></Navbar>
         <div className="col-md-12">
           <div className="col-md-12">
             <div className="chat_container">
@@ -149,7 +149,7 @@ export default class ChatPage extends Component {
 
                     <div className="chat_area">
                       <ul id="messages" className="list-unstyled">
-                        <Messages messages={this.state.message} name={JSON.parse(localStorage.getItem("data")).data.user.fullname} />
+                        <Messages messages={this.state.message} name={JSON.parse(localStorage.getItem("data")).data.user.email} />
                       </ul>
                     </div>
 
